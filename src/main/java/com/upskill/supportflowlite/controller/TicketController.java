@@ -10,11 +10,14 @@ import com.upskill.supportflowlite.service.CustomerService;
 import com.upskill.supportflowlite.service.ExecutiveService;
 import com.upskill.supportflowlite.service.TicketService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/ticket")
@@ -89,4 +92,15 @@ public class TicketController {
         ticket.setClosedAt(LocalDateTime.now());
         return ticketService.save(ticket);
     }
+
+    /*
+    * AIM: fetch all tickets that were closed on the same day
+    * */
+    @GetMapping("/all/same-day")
+    public List<Ticket> getTicketsClosedOnSameDay(@RequestParam Integer page,
+                                                  @RequestParam Integer size){
+
+        return ticketService.getTicketsClosedOnSameDay(page,size);
+    }
+
 }
