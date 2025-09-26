@@ -4,12 +4,17 @@ import com.upskill.supportflowlite.dto.TicketDto;
 import com.upskill.supportflowlite.enums.Priority;
 import com.upskill.supportflowlite.enums.Status;
 import com.upskill.supportflowlite.model.Customer;
+import com.upskill.supportflowlite.model.Executive;
 import com.upskill.supportflowlite.model.Ticket;
 import com.upskill.supportflowlite.service.CustomerService;
+import com.upskill.supportflowlite.service.ExecutiveService;
 import com.upskill.supportflowlite.service.TicketService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @RestController
 @RequestMapping("/api/ticket")
@@ -19,6 +24,8 @@ public class TicketController {
     private TicketService ticketService;
     @Autowired
     private CustomerService customerService;
+    @Autowired
+    private ExecutiveService executiveService;
 
     @PostMapping("/add/v1/{customerId}")
     public Ticket postTicketV1(@PathVariable int customerId ,
@@ -61,8 +68,24 @@ public class TicketController {
     * update existing ticket with executive object
     * save ticket -- since id is already present-it will act as update
     * */
-    @PostMapping("/executive/assign")
-    public void assignTicketToExecutive(){
+    @PostMapping("/executive/assign/{ticketId}/{executiveId}")
+    public Ticket assignTicketToExecutive(@PathVariable int ticketId ,
+                                        @PathVariable int executiveId){
 
+        Ticket ticket = ticketService.getTicketById(ticketId);
+        Executive executive =  executiveService.getExecutiveById(executiveId);
+
+        ticket.setExecutive(executive);
+        return ticketService.save(ticket);
+    }
+
+    /* API to close the ticket
+    * Take ticketId as Path Variable */
+    @PutMapping("/close/{ticketId}")
+    public Ticket closeTicket(@PathVariable int ticketId){
+
+        Ticket ticket = ticketService.getTicketById(ticketId);
+        ticket.setClosedAt(LocalDateTime.now());
+        return ticketService.save(ticket);
     }
 }

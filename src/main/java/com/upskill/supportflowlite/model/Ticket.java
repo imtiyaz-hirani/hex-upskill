@@ -5,6 +5,7 @@ import com.upskill.supportflowlite.enums.Status;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "tickets")
@@ -26,10 +27,10 @@ public class Ticket {
     private Status status;
 
     @Column(name = "created_at")
-    private LocalDate createdAt = LocalDate.now();
+    private LocalDateTime createdAt = LocalDateTime.now();
 
     @Column(name = "closed_at")
-    private LocalDate closedAt;
+    private LocalDateTime closedAt;
 
     @ManyToOne
     private Customer customer;
@@ -85,19 +86,19 @@ public class Ticket {
         this.status = status;
     }
 
-    public LocalDate getCreatedAt() {
+    public LocalDateTime getCreatedAt() {
         return createdAt;
     }
 
-    public void setCreatedAt(LocalDate createdAt) {
+    public void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
     }
 
-    public LocalDate getClosedAt() {
+    public LocalDateTime getClosedAt() {
         return closedAt;
     }
 
-    public void setClosedAt(LocalDate closedAt) {
+    public void setClosedAt(LocalDateTime closedAt) {
         this.closedAt = closedAt;
     }
 
