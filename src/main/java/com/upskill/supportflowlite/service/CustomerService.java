@@ -28,6 +28,10 @@ public class CustomerService {
     }
 
     public Customer fetchCustomerByUsername(String customerUsername) {
-        return customerRepository.findByUserUsername(customerUsername);
+        Customer customer = customerRepository.findByUserUsername(customerUsername);
+        if(customer == null)
+            throw new RuntimeException("Invalid Customer Username");
+
+        return customer;
     }
 }

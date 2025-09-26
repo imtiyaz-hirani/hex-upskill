@@ -1,5 +1,8 @@
 package com.upskill.supportflowlite.controller;
 
+import com.upskill.supportflowlite.dto.TicketDto;
+import com.upskill.supportflowlite.enums.Priority;
+import com.upskill.supportflowlite.enums.Status;
 import com.upskill.supportflowlite.model.Customer;
 import com.upskill.supportflowlite.model.Ticket;
 import com.upskill.supportflowlite.service.CustomerService;
@@ -31,17 +34,35 @@ public class TicketController {
 
     @PostMapping("/add/v2")
     public ResponseEntity<?> postTicketV2(@RequestParam("customerUsername") String customerUsername,
-                                          @RequestBody Ticket ticket){
+                                          @RequestBody TicketDto ticketDto ,
+                                          Ticket ticket){
         try {
             //Step 1: Fetch Customer Obj using username
             Customer customer = customerService.fetchCustomerByUsername(customerUsername);
             //Step 2: Attach customer to ticket
             ticket.setCustomer(customer);
-            //Step 3: Save Ticket
+            //Step 3: Pass all info from DTO to Ticket
+            ticket.setStatus(Status.OPEN);
+            ticket.setSubject(ticketDto.getSubject());
+            ticket.setMessage(ticketDto.getMessage());
+            ticket.setPriority(Priority.valueOf(ticketDto.getPriority()));
+            // Step 4: Save the ticket
             return ResponseEntity.ok(ticketService.save(ticket));
         }
-        catch(RuntimeException e){
+        catch(Exception e){
             return ResponseEntity.badRequest().body(e.getMessage());
         }
+
+    }
+
+    /*
+    * Take ticketId and executiveId as PathVariables
+    * fetch objects and validate
+    * update existing ticket with executive object
+    * save ticket -- since id is already present-it will act as update
+    * */
+    @PostMapping("/executive/assign")
+    public void assignTicketToExecutive(){
+
     }
 }
