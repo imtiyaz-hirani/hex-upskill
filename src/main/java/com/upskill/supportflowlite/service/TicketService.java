@@ -5,6 +5,7 @@ import com.upskill.supportflowlite.model.Ticket;
 import com.upskill.supportflowlite.repository.TicketRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -25,5 +26,9 @@ public class TicketService {
        if(optional.isEmpty())
            throw new RuntimeException("Invalid Ticket Id Given");
        return optional.get();
+    }
+
+    public List<Ticket> getTicketsByCustomerId(int customerId) {
+        return ticketRepository.getTicketsByCustomerId(customerId);
     }
 }

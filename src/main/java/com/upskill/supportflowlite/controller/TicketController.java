@@ -85,6 +85,7 @@ public class TicketController {
     public Ticket closeTicket(@PathVariable int ticketId){
 
         Ticket ticket = ticketService.getTicketById(ticketId);
+        ticket.setStatus(Status.CLOSED);
         ticket.setClosedAt(LocalDateTime.now());
         return ticketService.save(ticket);
     }
