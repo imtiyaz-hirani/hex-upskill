@@ -31,4 +31,8 @@ public class UserService {
                     .orElseThrow(()->RuntimeException.class);
         */
     }
+
+    public User getUserByUsername(String username) {
+        return userRepository.findByUsername(username);
+    }
 }

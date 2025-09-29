@@ -1,11 +1,13 @@
 package com.upskill.supportflowlite.controller;
 
+import com.upskill.supportflowlite.enums.UserRole;
 import com.upskill.supportflowlite.model.Executive;
 import com.upskill.supportflowlite.model.User;
 import com.upskill.supportflowlite.service.ExecutiveService;
 import com.upskill.supportflowlite.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -23,6 +25,7 @@ public class ExecutiveController {
        try{
            //Fetch User obj using this userId
            User user = userService.getUserById(userId);
+            user.setRole(UserRole.EXECUTIVE);
            //attach user to executive
            executive.setUser(user);
            return ResponseEntity.ok(executiveService.save(executive));

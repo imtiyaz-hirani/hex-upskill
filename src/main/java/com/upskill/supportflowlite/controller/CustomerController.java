@@ -1,6 +1,7 @@
 package com.upskill.supportflowlite.controller;
 
 import com.upskill.supportflowlite.dto.CustomerProfileDto;
+import com.upskill.supportflowlite.enums.UserRole;
 import com.upskill.supportflowlite.model.Customer;
 import com.upskill.supportflowlite.model.Product;
 import com.upskill.supportflowlite.model.Ticket;
@@ -10,6 +11,7 @@ import com.upskill.supportflowlite.service.ProductService;
 import com.upskill.supportflowlite.service.TicketService;
 import com.upskill.supportflowlite.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -29,13 +31,19 @@ public class CustomerController {
     private ProductService productService;
     @Autowired
     private TicketService ticketService;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @PostMapping("/add/v1")
     public Customer postCustomer(@RequestBody Customer customer){
         /* Always save internal linked classes first in the DB(user)
         * External classes should be saved in the end (customer)*/
         User user = customer.getUser(); //{username,password}
-        //password is right now in Plain text format
+        //attach the role
+        user.setRole(UserRole.CUSTOMER);
+
+        //password is right now in Plain text format so convert it into bcrypt encryption
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
         user = userService.save(user); //{id,username,password}
 
         //Attach the updated user to customer
